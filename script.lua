@@ -1,4 +1,3 @@
-
 --[[
     ⚔️ Bridge Duels AutoFarm v1.1
     Made by Sxzly
@@ -769,3 +768,4 @@ else
     print("⚠️ Lugar no soportado - Place ID: " .. currentPlaceId)
     print("📍 Ejecuta el script solo en Bridge Duels")
 end
+
