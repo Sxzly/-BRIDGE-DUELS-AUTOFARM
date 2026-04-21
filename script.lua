@@ -1,6 +1,6 @@
 --[[
     ⚔️ Bridge Duels AutoFarm v1.1
-    Made by generacyan
+    Made by Sxzly
     Modern autofarm script for Bridge Duels
 --]]
 
