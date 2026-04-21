@@ -1,3 +1,4 @@
+
 --[[
     ⚔️ Bridge Duels AutoFarm v1.1
     Made by Sxzly
@@ -133,7 +134,7 @@ local function sendDiscordEmbed(wins)
                     }
                 },
                 ["footer"] = {
-                    ["text"] = "AutoFarm by generacyan"
+                    ["text"] = "AutoFarm by Sxzly"
                 },
                 ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
             }}
@@ -547,7 +548,7 @@ if currentPlaceId == GAME_PLACE_ID then
     Footer.Size = UDim2.new(1, 0, 0, 25)
     Footer.BackgroundTransparency = 1
     Footer.Font = Enum.Font.Gotham
-    Footer.Text = "made by generacyan"
+    Footer.Text = "made by Sxzly"
     Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
     Footer.TextSize = 11
     Footer.ZIndex = 4
