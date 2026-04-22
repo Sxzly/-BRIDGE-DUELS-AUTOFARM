@@ -1,2 +1,2 @@
 # AutoFarm Bridge Duels 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/BridgeDuelsAuto/main/script.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/BRIDGE-DUELS-AUTOFARM/main/script.lua"))()
