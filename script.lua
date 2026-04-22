@@ -1,122 +1,20 @@
---[[
-    ⚔️ BRIDGE DUELS AUTOFARM v1.2
-    Script ULTRA PROTEGIDO - No modificar nada
---]]
-
+-- ESPERAR A QUE TODO CARGUE COMPLETAMENTE
 repeat task.wait() until game:IsLoaded()
 task.wait(3)
 
+-- Servicios
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
+-- Esperar a que el jugador cargue completamente
 repeat task.wait() until player.Character
 task.wait(2)
 
--- ============================================
--- DATOS ORIGINALES (NO MODIFICAR)
--- ============================================
-local ORIGINAL_OWNER = "Sxzly"
-local ORIGINAL_WEBHOOK = "https://discord.com/api/webhooks/1496154891230384160/gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
-local webhookURL = ORIGINAL_WEBHOOK
-
--- ============================================
--- VERIFICACIÓN DE INTEGRIDAD (DOBLE PROTECCIÓN)
--- ============================================
-local function checkIntegrity()
-    local errorMsg = ""
-    local blocked = false
-    
-    -- 1. VERIFICAR NOMBRE DEL DUEÑO en el footer de Discord
-    local expectedFooter = "AutoFarm by " .. ORIGINAL_OWNER
-    local currentFooter = "AutoFarm by Sxzly"  -- Este valor debe coincidir
-    
-    if currentFooter ~= expectedFooter then
-        errorMsg = "❌ CRÉDITOS MODIFICADOS - El nombre del dueño ha sido alterado"
-        blocked = true
-    end
-    
-    -- 2. VERIFICAR WEBHOOK (comparación exacta)
-    if webhookURL ~= ORIGINAL_WEBHOOK then
-        errorMsg = "❌ WEBHOOK MODIFICADO - La URL del webhook ha sido alterada"
-        blocked = true
-    end
-    
-    -- 3. VERIFICAR que el webhook contiene la ID correcta
-    local expectedWebhookID = "1496154891230384160"
-    if not webhookURL:find(expectedWebhookID) then
-        errorMsg = "❌ WEBHOOK INVÁLIDO - ID del webhook incorrecta"
-        blocked = true
-    end
-    
-    -- 4. VERIFICAR que el webhook contiene el token correcto
-    local expectedToken = "gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
-    if not webhookURL:find(expectedToken) then
-        errorMsg = "❌ WEBHOOK INVÁLIDO - Token del webhook incorrecto"
-        blocked = true
-    end
-    
-    -- 5. VERIFICAR el footer en la UI
-    -- (Esto se verificará cuando se cree la UI)
-    
-    if blocked then
-        print("═══════════════════════════════════════════════════════")
-        print(errorMsg)
-        print("📌 Este script pertenece a " .. ORIGINAL_OWNER)
-        print("📌 No está permitido modificar los créditos ni el webhook")
-        print("═══════════════════════════════════════════════════════")
-        return false
-    end
-    
-    return true
-end
-
--- Ejecutar verificación
-if not checkIntegrity() then
-    -- Mostrar mensaje de error y bloquear
-    local ErrorGui = Instance.new("ScreenGui")
-    ErrorGui.Parent = player:WaitForChild("PlayerGui")
-    
-    local ErrorFrame = Instance.new("Frame")
-    ErrorFrame.Parent = ErrorGui
-    ErrorFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    ErrorFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-    ErrorFrame.Size = UDim2.new(0, 400, 0, 200)
-    ErrorFrame.BackgroundColor3 = Color3.fromRGB(30, 20, 20)
-    ErrorFrame.BorderSizePixel = 0
-    
-    local ErrorCorner = Instance.new("UICorner")
-    ErrorCorner.CornerRadius = UDim.new(0, 15)
-    ErrorCorner.Parent = ErrorFrame
-    
-    local ErrorTitle = Instance.new("TextLabel")
-    ErrorTitle.Parent = ErrorFrame
-    ErrorTitle.Size = UDim2.new(1, 0, 0, 40)
-    ErrorTitle.BackgroundTransparency = 1
-    ErrorTitle.Font = Enum.Font.GothamBold
-    ErrorTitle.Text = "🔒 SCRIPT BLOQUEADO"
-    ErrorTitle.TextColor3 = Color3.fromRGB(255, 80, 80)
-    ErrorTitle.TextSize = 20
-    
-    local ErrorMsg = Instance.new("TextLabel")
-    ErrorMsg.Parent = ErrorFrame
-    ErrorMsg.Position = UDim2.new(0, 20, 0, 50)
-    ErrorMsg.Size = UDim2.new(1, -40, 0, 100)
-    ErrorMsg.BackgroundTransparency = 1
-    ErrorMsg.Font = Enum.Font.Gotham
-    ErrorMsg.Text = "Este script ha sido modificado.\n\nNo se permite cambiar:\n• El nombre del dueño (Sxzly)\n• El webhook de Discord\n\nEjecuta la versión original."
-    ErrorMsg.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ErrorMsg.TextSize = 14
-    ErrorMsg.TextWrapped = true
-    
-    return  -- BLOQUEAR COMPLETAMENTE
-end
-
--- ============================================
--- SI PASA LA VERIFICACIÓN, CONTINÚA EL SCRIPT
--- ============================================
+-- WEBHOOK DE DISCORD
+local webhookURL = "https://discord.com/api/webhooks/1496154891230384160/gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
 
 -- Variable para tiempo de inicio
 local startTime = os.time()
@@ -181,7 +79,7 @@ local function getPlaceStatus(placeId)
     end
 end
 
--- Función para enviar embed a Discord (con crédito forzado)
+-- Función para enviar embed a Discord
 local function sendDiscordEmbed(wins)
     local currentPlaceId = game.PlaceId
     local placeStatus = getPlaceStatus(currentPlaceId)
@@ -220,7 +118,7 @@ local function sendDiscordEmbed(wins)
                     }
                 },
                 ["footer"] = {
-                    ["text"] = "AutoFarm by " .. ORIGINAL_OWNER
+                    ["text"] = "AutoFarm by Sxzly"
                 },
                 ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
             }}
@@ -259,12 +157,12 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Blur de fondo
+-- Blur de fondo (efecto glassmorphism)
 local BlurEffect = Instance.new("BlurEffect")
 BlurEffect.Size = 0
 BlurEffect.Parent = game:GetService("Lighting")
 
--- Contenedor principal
+-- Contenedor principal moderno
 local MainContainer = Instance.new("Frame")
 MainContainer.Name = "MainContainer"
 MainContainer.Parent = ScreenGui
@@ -286,7 +184,16 @@ MainStroke.Thickness = 1
 MainStroke.Transparency = 0.7
 MainStroke.Parent = MainContainer
 
--- Header
+-- Gradiente sutil de fondo
+local MainGradient = Instance.new("UIGradient")
+MainGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 25, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 15, 20))
+}
+MainGradient.Rotation = 135
+MainGradient.Parent = MainContainer
+
+-- Header moderno
 local Header = Instance.new("Frame")
 Header.Name = "Header"
 Header.Parent = MainContainer
@@ -300,7 +207,7 @@ local HeaderCorner = Instance.new("UICorner")
 HeaderCorner.CornerRadius = UDim.new(0, 24)
 HeaderCorner.Parent = Header
 
--- Título
+-- Logo/Título
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = Header
 TitleLabel.Position = UDim2.new(0, 20, 0, 0)
@@ -311,6 +218,7 @@ TitleLabel.Text = "⚔️ BRIDGE DUELS"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 22
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.TextStrokeTransparency = 0.8
 TitleLabel.ZIndex = 4
 
 -- Versión badge
@@ -332,12 +240,12 @@ VersionText.Parent = VersionBadge
 VersionText.Size = UDim2.new(1, 0, 1, 0)
 VersionText.BackgroundTransparency = 1
 VersionText.Font = Enum.Font.GothamBold
-VersionText.Text = "v1.2"
+VersionText.Text = "v1.1 BETA"
 VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
 VersionText.TextSize = 13
 VersionText.ZIndex = 5
 
--- Stats Container
+-- Stats Container (Cards modernas)
 local StatsContainer = Instance.new("Frame")
 StatsContainer.Name = "StatsContainer"
 StatsContainer.Parent = MainContainer
@@ -454,7 +362,7 @@ TimeValue.TextSize = 28
 TimeValue.TextXAlignment = Enum.TextXAlignment.Left
 TimeValue.ZIndex = 5
 
--- Avatar Container
+-- Avatar Container moderno
 local AvatarContainer = Instance.new("Frame")
 AvatarContainer.Parent = MainContainer
 AvatarContainer.Position = UDim2.new(0, 20, 0, 210)
@@ -467,6 +375,12 @@ AvatarContainer.ZIndex = 3
 local AvatarCorner = Instance.new("UICorner")
 AvatarCorner.CornerRadius = UDim.new(0, 16)
 AvatarCorner.Parent = AvatarContainer
+
+local AvatarStroke = Instance.new("UIStroke")
+AvatarStroke.Color = Color3.fromRGB(100, 100, 120)
+AvatarStroke.Thickness = 1
+AvatarStroke.Transparency = 0.7
+AvatarStroke.Parent = AvatarContainer
 
 -- Avatar Image
 local AvatarImage = Instance.new("ImageLabel")
@@ -514,7 +428,7 @@ UsernameValue.TextXAlignment = Enum.TextXAlignment.Left
 UsernameValue.TextWrapped = true
 UsernameValue.ZIndex = 5
 
--- Show/Hide Username Button
+-- Show/Hide Username Button moderno
 local ShowUsernameBtn = Instance.new("TextButton")
 ShowUsernameBtn.Parent = UsernameContainer
 ShowUsernameBtn.Position = UDim2.new(0, 0, 1, -50)
@@ -533,7 +447,7 @@ local ShowBtnCorner = Instance.new("UICorner")
 ShowBtnCorner.CornerRadius = UDim.new(0, 10)
 ShowBtnCorner.Parent = ShowUsernameBtn
 
--- Timer Container
+-- Timer Container moderno
 local TimerContainer = Instance.new("Frame")
 TimerContainer.Parent = MainContainer
 TimerContainer.Position = UDim2.new(0, 20, 0, 430)
@@ -553,6 +467,15 @@ TimerStroke.Thickness = 2
 TimerStroke.Transparency = 0.5
 TimerStroke.Parent = TimerContainer
 
+local TimerGradient = Instance.new("UIGradient")
+TimerGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 215, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 140, 0))
+}
+TimerGradient.Rotation = 45
+TimerGradient.Transparency = NumberSequence.new(0.9)
+TimerGradient.Parent = TimerContainer
+
 local TimerLabel = Instance.new("TextLabel")
 TimerLabel.Parent = TimerContainer
 TimerLabel.Size = UDim2.new(1, 0, 1, 0)
@@ -563,7 +486,7 @@ TimerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TimerLabel.TextSize = 24
 TimerLabel.ZIndex = 4
 
--- Botones de control
+-- Botones de control modernos
 local ControlsContainer = Instance.new("Frame")
 ControlsContainer.Parent = MainContainer
 ControlsContainer.Position = UDim2.new(0, 20, 0, 530)
@@ -571,7 +494,7 @@ ControlsContainer.Size = UDim2.new(1, -40, 0, 70)
 ControlsContainer.BackgroundTransparency = 1
 ControlsContainer.ZIndex = 3
 
--- Botón Close
+-- Botón Close moderno
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Parent = ControlsContainer
 CloseBtn.Position = UDim2.new(0, 0, 0, 0)
@@ -590,7 +513,7 @@ local CloseBtnCorner = Instance.new("UICorner")
 CloseBtnCorner.CornerRadius = UDim.new(0, 12)
 CloseBtnCorner.Parent = CloseBtn
 
--- Botón Reset
+-- Botón Reset moderno
 local ResetBtn = Instance.new("TextButton")
 ResetBtn.Parent = ControlsContainer
 ResetBtn.Position = UDim2.new(0.52, 0, 0, 0)
@@ -609,14 +532,14 @@ local ResetBtnCorner = Instance.new("UICorner")
 ResetBtnCorner.CornerRadius = UDim.new(0, 12)
 ResetBtnCorner.Parent = ResetBtn
 
--- Footer (con crédito forzado - si alguien lo borra, se nota visualmente)
+-- Footer
 local Footer = Instance.new("TextLabel")
 Footer.Parent = MainContainer
 Footer.Position = UDim2.new(0, 0, 1, -25)
 Footer.Size = UDim2.new(1, 0, 0, 25)
 Footer.BackgroundTransparency = 1
 Footer.Font = Enum.Font.Gotham
-Footer.Text = "made by " .. ORIGINAL_OWNER
+Footer.Text = "made by Sxzly"
 Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
 Footer.TextSize = 11
 Footer.ZIndex = 4
@@ -641,6 +564,11 @@ local ReopenCorner = Instance.new("UICorner")
 ReopenCorner.CornerRadius = UDim.new(1, 0)
 ReopenCorner.Parent = ReopenBtn
 
+local ReopenStroke = Instance.new("UIStroke")
+ReopenStroke.Color = Color3.fromRGB(100, 100, 255)
+ReopenStroke.Thickness = 3
+ReopenStroke.Parent = ReopenBtn
+
 -- Cargar avatar
 task.spawn(function()
     local success, thumbnail = pcall(function()
@@ -652,7 +580,7 @@ task.spawn(function()
     end
 end)
 
--- Actualizar tiempo
+-- Actualizar tiempo en loop
 task.spawn(function()
     while true do
         TimeValue.Text = getElapsedTime()
@@ -660,7 +588,7 @@ task.spawn(function()
     end
 end)
 
--- Funcionalidad de botones
+-- Funcionalidad de botones con animaciones
 local showing = false
 ShowUsernameBtn.MouseButton1Click:Connect(function()
     showing = not showing
@@ -728,10 +656,6 @@ task.wait(0.5)
 smoothTween(MainContainer, {Size = UDim2.new(0, 480, 0, 620)}, 0.5)
 smoothTween(BlurEffect, {Size = 10}, 0.5)
 
-print("✅ Bridge Duels AutoFarm v1.2 Cargado")
-print("🔒 Protección activada - Dueño: " .. ORIGINAL_OWNER)
-print("🔒 Webhook protegido - No se puede modificar")
-
 -- Loop principal
 while true do
     for i = 20, 1, -1 do
@@ -765,6 +689,7 @@ while true do
         totalWins = totalWins + 1
         WinsValue.Text = tostring(totalWins)
         
+        -- Animación de win
         smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(255, 215, 0)}, 0.3)
         task.wait(0.2)
         smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(40, 40, 50)}, 0.3)
