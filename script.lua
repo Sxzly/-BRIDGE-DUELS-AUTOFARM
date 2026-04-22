@@ -32,7 +32,7 @@ end
 local OWNER_NAME = getOwnerName()
 
 -- ============================================
--- PROTECCIÓN: Verificar integridad
+-- PROTECCIÓN
 -- ============================================
 local function checkScriptIntegrity()
     local expectedWebhook = "https://discord.com/api/webhooks/1496154891230384160/gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
@@ -171,7 +171,7 @@ local function rejoin()
 end
 
 -- ============================================
--- UI MODERNA COMPLETA (como la antigua)
+-- UI MODERNA COMPLETA
 -- ============================================
 local function smoothTween(object, properties, duration)
     local tween = TweenService:Create(object, TweenInfo.new(duration or 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), properties)
@@ -189,7 +189,6 @@ local BlurEffect = Instance.new("BlurEffect")
 BlurEffect.Size = 0
 BlurEffect.Parent = game:GetService("Lighting")
 
--- Contenedor principal (más grande para UI moderna)
 local MainContainer = Instance.new("Frame")
 MainContainer.Name = "MainContainer"
 MainContainer.Parent = ScreenGui
@@ -213,7 +212,6 @@ MainStroke.Thickness = 1
 MainStroke.Transparency = 0.7
 MainStroke.Parent = MainContainer
 
--- Gradiente de fondo
 local MainGradient = Instance.new("UIGradient")
 MainGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 25, 35)),
@@ -271,7 +269,6 @@ VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
 VersionText.TextSize = 13
 VersionText.ZIndex = 5
 
--- Botón minimizar
 local MinBtn = Instance.new("TextButton")
 MinBtn.Parent = Header
 MinBtn.Position = UDim2.new(1, -35, 0.5, -12)
@@ -287,7 +284,7 @@ local MinCorner = Instance.new("UICorner")
 MinCorner.CornerRadius = UDim.new(0, 6)
 MinCorner.Parent = MinBtn
 
--- Stats Container (Cards)
+-- Stats Container
 local StatsContainer = Instance.new("Frame")
 StatsContainer.Name = "StatsContainer"
 StatsContainer.Parent = MainContainer
@@ -296,7 +293,7 @@ StatsContainer.Size = UDim2.new(1, -40, 0, 100)
 StatsContainer.BackgroundTransparency = 1
 StatsContainer.ZIndex = 3
 
--- Card de Wins
+-- Wins Card
 local WinsCard = Instance.new("Frame")
 WinsCard.Parent = StatsContainer
 WinsCard.Position = UDim2.new(0, 0, 0, 0)
@@ -350,7 +347,7 @@ WinsValue.TextSize = 28
 WinsValue.TextXAlignment = Enum.TextXAlignment.Left
 WinsValue.ZIndex = 5
 
--- Card de Time
+-- Time Card
 local TimeCard = Instance.new("Frame")
 TimeCard.Parent = StatsContainer
 TimeCard.Position = UDim2.new(0.52, 0, 0, 0)
@@ -431,7 +428,7 @@ local AvatarImageCorner = Instance.new("UICorner")
 AvatarImageCorner.CornerRadius = UDim.new(0, 12)
 AvatarImageCorner.Parent = AvatarImage
 
--- Username display
+-- Username
 local UsernameContainer = Instance.new("Frame")
 UsernameContainer.Parent = AvatarContainer
 UsernameContainer.Position = UDim2.new(0, 200, 0, 15)
@@ -481,7 +478,7 @@ local ShowBtnCorner = Instance.new("UICorner")
 ShowBtnCorner.CornerRadius = UDim.new(0, 10)
 ShowBtnCorner.Parent = ShowUsernameBtn
 
--- Timer Container (Countdown)
+-- Timer Container
 local TimerContainer = Instance.new("Frame")
 TimerContainer.Parent = MainContainer
 TimerContainer.Position = UDim2.new(0, 20, 0, 430)
@@ -511,7 +508,7 @@ CountdownLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 CountdownLabel.TextSize = 24
 CountdownLabel.ZIndex = 4
 
--- Botones de control
+-- Botones
 local ControlsContainer = Instance.new("Frame")
 ControlsContainer.Parent = MainContainer
 ControlsContainer.Position = UDim2.new(0, 20, 0, 530)
@@ -549,7 +546,7 @@ Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
 Footer.TextSize = 11
 Footer.ZIndex = 4
 
--- Botón flotante para reabrir
+-- Botón flotante
 local ReopenBtn = Instance.new("TextButton")
 ReopenBtn.Parent = ScreenGui
 ReopenBtn.Position = UDim2.new(0.02, 0, 0.5, -30)
@@ -582,7 +579,7 @@ task.spawn(function()
     if success then AvatarImage.Image = thumbnail end
 end)
 
--- Actualizar tiempo
+-- Actualizar UI
 task.spawn(function()
     while true do
         TimeValue.Text = getElapsedTime()
@@ -591,7 +588,7 @@ task.spawn(function()
     end
 end)
 
--- Mostrar/ocultar username
+-- Botones
 local showing = false
 ShowUsernameBtn.MouseButton1Click:Connect(function()
     showing = not showing
@@ -607,7 +604,6 @@ ShowUsernameBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Reset button
 ResetBtn.MouseEnter:Connect(function()
     smoothTween(ResetBtn, {BackgroundTransparency = 0}, 0.2)
 end)
@@ -623,7 +619,7 @@ ResetBtn.MouseButton1Click:Connect(function()
     smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(40, 40, 50)}, 0.2)
 end)
 
--- Minimizar/Reabrir
+-- Minimizar
 local minimized = false
 local originalSize = MainContainer.Size
 
@@ -631,8 +627,7 @@ local function minimizeUI()
     if minimized then
         smoothTween(MainContainer, {Size = originalSize}, 0.3)
         smoothTween(BlurEffect, {Size = 10}, 0.3)
-        WinsCard.Visible = true
-        TimeCard.Visible = true
+        StatsContainer.Visible = true
         AvatarContainer.Visible = true
         TimerContainer.Visible = true
         ControlsContainer.Visible = true
@@ -674,7 +669,7 @@ ReopenBtn.MouseLeave:Connect(function()
     smoothTween(ReopenBtn, {Size = UDim2.new(0, 60, 0, 60)}, 0.2)
 end)
 
--- Animación de entrada
+-- Animación entrada
 MainContainer.Size = UDim2.new(0, 0, 0, 0)
 task.wait(0.5)
 smoothTween(MainContainer, {Size = UDim2.new(0, 480, 0, 620)}, 0.5)
