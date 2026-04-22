@@ -1,64 +1,112 @@
--- ESPERAR A QUE TODO CARGUE COMPLETAMENTE
+--[[
+    ⚔️ BRIDGE DUELS AUTOFARM v1.2
+    Script ULTRA PROTEGIDO - UI Moderna
+--]]
+
 repeat task.wait() until game:IsLoaded()
 task.wait(3)
 
--- Servicios
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
--- Esperar a que el jugador cargue completamente
 repeat task.wait() until player.Character
 task.wait(2)
 
--- WEBHOOK DE DISCORD
-local webhookURL = "https://discord.com/api/webhooks/1496154891230384160/gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
+-- ============================================
+-- DATOS OFUSCADOS (PROTECCIÓN)
+-- ============================================
+local function getWebhook()
+    return "https://discord.com/api/webhooks/1496154891230384160/gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
+end
+local webhookURL = getWebhook()
 
--- Variable para tiempo de inicio
-local startTime = os.time()
+local function getOwnerName()
+    local chars = {83, 120, 122, 108, 121}
+    local name = ""
+    for i = 1, #chars do name = name .. string.char(chars[i]) end
+    return name
+end
+local OWNER_NAME = getOwnerName()
 
--- Variable para contar victorias (cargar desde archivo)
-local totalWins = 0
-local saveFileName = "autofarm_wins.txt"
-
--- Cargar victorias guardadas
-if isfile and readfile then
-    local success, savedWins = pcall(function()
-        return readfile(saveFileName)
-    end)
+-- ============================================
+-- PROTECCIÓN: Verificar integridad
+-- ============================================
+local function checkScriptIntegrity()
+    local expectedWebhook = "https://discord.com/api/webhooks/1496154891230384160/gJd2ONhw9OvN48fVlmW6-gRRW3zvXbzr-Iv7xITzPT-vkdFAm9Yt7ygEikfhjAYVgWn6"
     
-    if success and savedWins then
-        totalWins = tonumber(savedWins) or 0
-        print("✅ Wins loaded:", totalWins)
-    else
-        print("⚠️ No saved wins, starting from 0")
+    if webhookURL ~= expectedWebhook then
+        print("❌ Webhook modificado - Ejecución bloqueada")
+        return false
     end
-else
-    warn("⚠️ Your executor doesn't support writefile/readfile. Wins won't be saved.")
+    
+    print("✅ Verificación superada")
+    return true
 end
 
--- Función para guardar victorias
+if not checkScriptIntegrity() then
+    local ErrorGui = Instance.new("ScreenGui")
+    ErrorGui.Parent = player:WaitForChild("PlayerGui")
+    
+    local ErrorFrame = Instance.new("Frame")
+    ErrorFrame.Parent = ErrorGui
+    ErrorFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    ErrorFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    ErrorFrame.Size = UDim2.new(0, 400, 0, 150)
+    ErrorFrame.BackgroundColor3 = Color3.fromRGB(30, 20, 20)
+    ErrorFrame.BorderSizePixel = 0
+    
+    local ErrorCorner = Instance.new("UICorner")
+    ErrorCorner.CornerRadius = UDim.new(0, 15)
+    ErrorCorner.Parent = ErrorFrame
+    
+    local ErrorTitle = Instance.new("TextLabel")
+    ErrorTitle.Parent = ErrorFrame
+    ErrorTitle.Size = UDim2.new(1, 0, 0, 40)
+    ErrorTitle.BackgroundTransparency = 1
+    ErrorTitle.Font = Enum.Font.GothamBold
+    ErrorTitle.Text = "🔒 SCRIPT BLOQUEADO"
+    ErrorTitle.TextColor3 = Color3.fromRGB(255, 80, 80)
+    ErrorTitle.TextSize = 20
+    
+    local ErrorMsg = Instance.new("TextLabel")
+    ErrorMsg.Parent = ErrorFrame
+    ErrorMsg.Position = UDim2.new(0, 20, 0, 50)
+    ErrorMsg.Size = UDim2.new(1, -40, 0, 80)
+    ErrorMsg.BackgroundTransparency = 1
+    ErrorMsg.Font = Enum.Font.Gotham
+    ErrorMsg.Text = "Este script ha sido modificado.\n\nNo se permite cambiar el webhook."
+    ErrorMsg.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ErrorMsg.TextSize = 14
+    ErrorMsg.TextWrapped = true
+    
+    return
+end
+
+-- ============================================
+-- CONFIGURACIÓN
+-- ============================================
+local GAME_PLACE_ID = game.PlaceId
+local totalWins = 0
+local startTime = os.time()
+local saveFileName = "bridgeduels_farm.txt"
+
+if isfile and readfile then
+    local success, savedWins = pcall(function() return readfile(saveFileName) end)
+    if success and savedWins then totalWins = tonumber(savedWins) or 0 end
+end
+
 local function saveWins()
-    if writefile then
-        local success = pcall(function()
-            writefile(saveFileName, tostring(totalWins))
-        end)
-        
-        if success then
-            print("💾 Wins saved:", totalWins)
-        end
-    end
+    if writefile then pcall(function() writefile(saveFileName, tostring(totalWins)) end) end
 end
 
--- Función para calcular tiempo transcurrido
 local function getElapsedTime()
     local elapsed = os.time() - startTime
     local hours = math.floor(elapsed / 3600)
     local minutes = math.floor((elapsed % 3600) / 60)
     local seconds = elapsed % 60
-    
     if hours > 0 then
         return string.format("%dh %dm %ds", hours, minutes, seconds)
     elseif minutes > 0 then
@@ -68,101 +116,80 @@ local function getElapsedTime()
     end
 end
 
--- Función para obtener nombre del lugar
-local function getPlaceStatus(placeId)
-    if placeId == 6872265039 then
-        return "Lobby"
-    elseif placeId == 8560631822 then
-        return "In-Game"
-    else
-        return "Unknown"
-    end
-end
-
--- Función para enviar embed a Discord
 local function sendDiscordEmbed(wins)
-    local currentPlaceId = game.PlaceId
-    local placeStatus = getPlaceStatus(currentPlaceId)
+    if webhookURL == "" then return end
     
-    local success, err = pcall(function()
-        local embed = {
-            ["embeds"] = {{
-                ["title"] = "🔥 Victory Registered!",
-                ["description"] = "The autofarm has secured another win",
-                ["color"] = 15844367,
-                ["fields"] = {
-                    {
-                        ["name"] = "👤 Username",
-                        ["value"] = player.Name,
-                        ["inline"] = true
-                    },
-                    {
-                        ["name"] = "🏆 Total Wins",
-                        ["value"] = tostring(wins),
-                        ["inline"] = true
-                    },
-                    {
-                        ["name"] = "⏱️ Running Time",
-                        ["value"] = getElapsedTime(),
-                        ["inline"] = true
-                    },
-                    {
-                        ["name"] = "📍 Place Status",
-                        ["value"] = placeStatus,
-                        ["inline"] = true
-                    },
-                    {
-                        ["name"] = "🎮 Game",
-                        ["value"] = "Bridge Duels",
-                        ["inline"] = true
-                    }
-                },
-                ["footer"] = {
-                    ["text"] = "AutoFarm by Sxzly"
-                },
-                ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
-            }}
-        }
-        
-        local response = request({
-            Url = webhookURL,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
+    local ownerDisplay = "AutoFarm by " .. OWNER_NAME
+    
+    local embed = {
+        ["embeds"] = {{
+            ["title"] = "🔥 Victory Registered!",
+            ["description"] = "The autofarm has secured another win",
+            ["color"] = 15844367,
+            ["fields"] = {
+                {["name"] = "👤 Username", ["value"] = player.Name, ["inline"] = true},
+                {["name"] = "🏆 Total Wins", ["value"] = tostring(wins), ["inline"] = true},
+                {["name"] = "⏱️ Running Time", ["value"] = getElapsedTime(), ["inline"] = true},
+                {["name"] = "🎮 Game", ["value"] = "Bridge Duels", ["inline"] = true},
             },
-            Body = HttpService:JSONEncode(embed)
-        })
-        
-        if response.StatusCode == 204 then
-            print("✅ Embed sent to Discord")
-        end
+            ["footer"] = {["text"] = ownerDisplay},
+            ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
+        }}
+    }
+    
+    pcall(function()
+        request({Url = webhookURL, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = HttpService:JSONEncode(embed)})
+        print("✅ Mensaje enviado a Discord")
     end)
 end
 
--- Función de animación smooth
+local function touchTouchdown()
+    for _, v in pairs(workspace:GetChildren()) do
+        if v.Name == "BridgeDuelTouchdownZone" then
+            local char = player.Character
+            if char and v:GetAttribute("TouchdownZoneTeamID") ~= char:GetAttribute("Team") then
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    firetouchinterest(hrp, v, 1)
+                    task.wait(0.1)
+                    firetouchinterest(hrp, v, 0)
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
+local function rejoin()
+    print("🔄 Rejoineando...")
+    task.wait(0.5)
+    player:Kick()
+    task.wait(1.23)
+    local data = TeleportService:GetLocalPlayerTeleportData()
+    TeleportService:Teleport(GAME_PLACE_ID, player, data)
+end
+
+-- ============================================
+-- UI MODERNA COMPLETA (como la antigua)
+-- ============================================
 local function smoothTween(object, properties, duration)
-    local tween = TweenService:Create(
-        object,
-        TweenInfo.new(duration or 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-        properties
-    )
+    local tween = TweenService:Create(object, TweenInfo.new(duration or 0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), properties)
     tween:Play()
     return tween
 end
 
--- ScreenGui principal
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Blur de fondo (efecto glassmorphism)
 local BlurEffect = Instance.new("BlurEffect")
 BlurEffect.Size = 0
 BlurEffect.Parent = game:GetService("Lighting")
 
--- Contenedor principal moderno
+-- Contenedor principal (más grande para UI moderna)
 local MainContainer = Instance.new("Frame")
 MainContainer.Name = "MainContainer"
 MainContainer.Parent = ScreenGui
@@ -173,6 +200,8 @@ MainContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 MainContainer.BackgroundTransparency = 0.1
 MainContainer.BorderSizePixel = 0
 MainContainer.ZIndex = 2
+MainContainer.Active = true
+MainContainer.Draggable = true
 
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 24)
@@ -184,7 +213,7 @@ MainStroke.Thickness = 1
 MainStroke.Transparency = 0.7
 MainStroke.Parent = MainContainer
 
--- Gradiente sutil de fondo
+-- Gradiente de fondo
 local MainGradient = Instance.new("UIGradient")
 MainGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 25, 35)),
@@ -193,7 +222,7 @@ MainGradient.Color = ColorSequence.new{
 MainGradient.Rotation = 135
 MainGradient.Parent = MainContainer
 
--- Header moderno
+-- Header
 local Header = Instance.new("Frame")
 Header.Name = "Header"
 Header.Parent = MainContainer
@@ -207,7 +236,6 @@ local HeaderCorner = Instance.new("UICorner")
 HeaderCorner.CornerRadius = UDim.new(0, 24)
 HeaderCorner.Parent = Header
 
--- Logo/Título
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = Header
 TitleLabel.Position = UDim2.new(0, 20, 0, 0)
@@ -218,10 +246,8 @@ TitleLabel.Text = "⚔️ BRIDGE DUELS"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 22
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-TitleLabel.TextStrokeTransparency = 0.8
 TitleLabel.ZIndex = 4
 
--- Versión badge
 local VersionBadge = Instance.new("Frame")
 VersionBadge.Parent = Header
 VersionBadge.Position = UDim2.new(1, -130, 0.5, -15)
@@ -240,12 +266,28 @@ VersionText.Parent = VersionBadge
 VersionText.Size = UDim2.new(1, 0, 1, 0)
 VersionText.BackgroundTransparency = 1
 VersionText.Font = Enum.Font.GothamBold
-VersionText.Text = "v1.1 BETA"
+VersionText.Text = "v1.2"
 VersionText.TextColor3 = Color3.fromRGB(255, 255, 255)
 VersionText.TextSize = 13
 VersionText.ZIndex = 5
 
--- Stats Container (Cards modernas)
+-- Botón minimizar
+local MinBtn = Instance.new("TextButton")
+MinBtn.Parent = Header
+MinBtn.Position = UDim2.new(1, -35, 0.5, -12)
+MinBtn.Size = UDim2.new(0, 25, 0, 25)
+MinBtn.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+MinBtn.BackgroundTransparency = 0.3
+MinBtn.Text = "─"
+MinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinBtn.TextSize = 14
+MinBtn.ZIndex = 4
+
+local MinCorner = Instance.new("UICorner")
+MinCorner.CornerRadius = UDim.new(0, 6)
+MinCorner.Parent = MinBtn
+
+-- Stats Container (Cards)
 local StatsContainer = Instance.new("Frame")
 StatsContainer.Name = "StatsContainer"
 StatsContainer.Parent = MainContainer
@@ -356,13 +398,13 @@ TimeValue.Position = UDim2.new(0, 15, 0, 65)
 TimeValue.Size = UDim2.new(1, -30, 0, 25)
 TimeValue.BackgroundTransparency = 1
 TimeValue.Font = Enum.Font.GothamBold
-TimeValue.Text = "0s"
+TimeValue.Text = getElapsedTime()
 TimeValue.TextColor3 = Color3.fromRGB(100, 180, 255)
 TimeValue.TextSize = 28
 TimeValue.TextXAlignment = Enum.TextXAlignment.Left
 TimeValue.ZIndex = 5
 
--- Avatar Container moderno
+-- Avatar Container
 local AvatarContainer = Instance.new("Frame")
 AvatarContainer.Parent = MainContainer
 AvatarContainer.Position = UDim2.new(0, 20, 0, 210)
@@ -376,13 +418,6 @@ local AvatarCorner = Instance.new("UICorner")
 AvatarCorner.CornerRadius = UDim.new(0, 16)
 AvatarCorner.Parent = AvatarContainer
 
-local AvatarStroke = Instance.new("UIStroke")
-AvatarStroke.Color = Color3.fromRGB(100, 100, 120)
-AvatarStroke.Thickness = 1
-AvatarStroke.Transparency = 0.7
-AvatarStroke.Parent = AvatarContainer
-
--- Avatar Image
 local AvatarImage = Instance.new("ImageLabel")
 AvatarImage.Parent = AvatarContainer
 AvatarImage.Position = UDim2.new(0, 15, 0, 15)
@@ -428,7 +463,6 @@ UsernameValue.TextXAlignment = Enum.TextXAlignment.Left
 UsernameValue.TextWrapped = true
 UsernameValue.ZIndex = 5
 
--- Show/Hide Username Button moderno
 local ShowUsernameBtn = Instance.new("TextButton")
 ShowUsernameBtn.Parent = UsernameContainer
 ShowUsernameBtn.Position = UDim2.new(0, 0, 1, -50)
@@ -447,7 +481,7 @@ local ShowBtnCorner = Instance.new("UICorner")
 ShowBtnCorner.CornerRadius = UDim.new(0, 10)
 ShowBtnCorner.Parent = ShowUsernameBtn
 
--- Timer Container moderno
+-- Timer Container (Countdown)
 local TimerContainer = Instance.new("Frame")
 TimerContainer.Parent = MainContainer
 TimerContainer.Position = UDim2.new(0, 20, 0, 430)
@@ -467,26 +501,17 @@ TimerStroke.Thickness = 2
 TimerStroke.Transparency = 0.5
 TimerStroke.Parent = TimerContainer
 
-local TimerGradient = Instance.new("UIGradient")
-TimerGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 215, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 140, 0))
-}
-TimerGradient.Rotation = 45
-TimerGradient.Transparency = NumberSequence.new(0.9)
-TimerGradient.Parent = TimerContainer
+local CountdownLabel = Instance.new("TextLabel")
+CountdownLabel.Parent = TimerContainer
+CountdownLabel.Size = UDim2.new(1, 0, 1, 0)
+CountdownLabel.BackgroundTransparency = 1
+CountdownLabel.Font = Enum.Font.GothamBold
+CountdownLabel.Text = "⏳ Winning In: 20s"
+CountdownLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+CountdownLabel.TextSize = 24
+CountdownLabel.ZIndex = 4
 
-local TimerLabel = Instance.new("TextLabel")
-TimerLabel.Parent = TimerContainer
-TimerLabel.Size = UDim2.new(1, 0, 1, 0)
-TimerLabel.BackgroundTransparency = 1
-TimerLabel.Font = Enum.Font.GothamBold
-TimerLabel.Text = "⏳ Winning In: 20s"
-TimerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TimerLabel.TextSize = 24
-TimerLabel.ZIndex = 4
-
--- Botones de control modernos
+-- Botones de control
 local ControlsContainer = Instance.new("Frame")
 ControlsContainer.Parent = MainContainer
 ControlsContainer.Position = UDim2.new(0, 20, 0, 530)
@@ -494,35 +519,15 @@ ControlsContainer.Size = UDim2.new(1, -40, 0, 70)
 ControlsContainer.BackgroundTransparency = 1
 ControlsContainer.ZIndex = 3
 
--- Botón Close moderno
-local CloseBtn = Instance.new("TextButton")
-CloseBtn.Parent = ControlsContainer
-CloseBtn.Position = UDim2.new(0, 0, 0, 0)
-CloseBtn.Size = UDim2.new(0.48, 0, 1, 0)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 80)
-CloseBtn.BackgroundTransparency = 0.2
-CloseBtn.BorderSizePixel = 0
-CloseBtn.Font = Enum.Font.GothamBold
-CloseBtn.Text = "✖ CLOSE"
-CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseBtn.TextSize = 16
-CloseBtn.AutoButtonColor = false
-CloseBtn.ZIndex = 4
-
-local CloseBtnCorner = Instance.new("UICorner")
-CloseBtnCorner.CornerRadius = UDim.new(0, 12)
-CloseBtnCorner.Parent = CloseBtn
-
--- Botón Reset moderno
 local ResetBtn = Instance.new("TextButton")
 ResetBtn.Parent = ControlsContainer
-ResetBtn.Position = UDim2.new(0.52, 0, 0, 0)
-ResetBtn.Size = UDim2.new(0.48, 0, 1, 0)
+ResetBtn.Position = UDim2.new(0, 0, 0, 0)
+ResetBtn.Size = UDim2.new(1, 0, 1, 0)
 ResetBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
 ResetBtn.BackgroundTransparency = 0.2
 ResetBtn.BorderSizePixel = 0
 ResetBtn.Font = Enum.Font.GothamBold
-ResetBtn.Text = "🔄 RESET"
+ResetBtn.Text = "🔄 RESET WINS"
 ResetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 ResetBtn.TextSize = 16
 ResetBtn.AutoButtonColor = false
@@ -539,12 +544,12 @@ Footer.Position = UDim2.new(0, 0, 1, -25)
 Footer.Size = UDim2.new(1, 0, 0, 25)
 Footer.BackgroundTransparency = 1
 Footer.Font = Enum.Font.Gotham
-Footer.Text = "made by Sxzly"
+Footer.Text = "made by " .. OWNER_NAME
 Footer.TextColor3 = Color3.fromRGB(100, 100, 110)
 Footer.TextSize = 11
 Footer.ZIndex = 4
 
--- Botón para reabrir (minimizado)
+-- Botón flotante para reabrir
 local ReopenBtn = Instance.new("TextButton")
 ReopenBtn.Parent = ScreenGui
 ReopenBtn.Position = UDim2.new(0.02, 0, 0.5, -30)
@@ -574,28 +579,25 @@ task.spawn(function()
     local success, thumbnail = pcall(function()
         return Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.AvatarBust, Enum.ThumbnailSize.Size420x420)
     end)
-    
-    if success then
-        AvatarImage.Image = thumbnail
-    end
+    if success then AvatarImage.Image = thumbnail end
 end)
 
--- Actualizar tiempo en loop
+-- Actualizar tiempo
 task.spawn(function()
     while true do
         TimeValue.Text = getElapsedTime()
+        WinsValue.Text = tostring(totalWins)
         task.wait(1)
     end
 end)
 
--- Funcionalidad de botones con animaciones
+-- Mostrar/ocultar username
 local showing = false
 ShowUsernameBtn.MouseButton1Click:Connect(function()
     showing = not showing
     smoothTween(ShowUsernameBtn, {BackgroundColor3 = Color3.fromRGB(90, 90, 255)}, 0.2)
     task.wait(0.1)
     smoothTween(ShowUsernameBtn, {BackgroundColor3 = Color3.fromRGB(70, 70, 255)}, 0.2)
-    
     if showing then
         UsernameValue.Text = player.Name
         ShowUsernameBtn.Text = "🔓 HIDE"
@@ -605,40 +607,53 @@ ShowUsernameBtn.MouseButton1Click:Connect(function()
     end
 end)
 
-CloseBtn.MouseEnter:Connect(function()
-    smoothTween(CloseBtn, {BackgroundTransparency = 0}, 0.2)
-end)
-
-CloseBtn.MouseLeave:Connect(function()
-    smoothTween(CloseBtn, {BackgroundTransparency = 0.2}, 0.2)
-end)
-
-CloseBtn.MouseButton1Click:Connect(function()
-    smoothTween(MainContainer, {Size = UDim2.new(0, 0, 0, 0)}, 0.3)
-    smoothTween(BlurEffect, {Size = 0}, 0.3)
-    task.wait(0.3)
-    MainContainer.Visible = false
-    ReopenBtn.Visible = true
-    smoothTween(ReopenBtn, {Size = UDim2.new(0, 60, 0, 60)}, 0.3)
-end)
-
+-- Reset button
 ResetBtn.MouseEnter:Connect(function()
     smoothTween(ResetBtn, {BackgroundTransparency = 0}, 0.2)
 end)
-
 ResetBtn.MouseLeave:Connect(function()
     smoothTween(ResetBtn, {BackgroundTransparency = 0.2}, 0.2)
 end)
-
 ResetBtn.MouseButton1Click:Connect(function()
     smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(255, 100, 100)}, 0.2)
     task.wait(0.1)
     totalWins = 0
     WinsValue.Text = "0"
     saveWins()
-    task.wait(0.1)
     smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(40, 40, 50)}, 0.2)
 end)
+
+-- Minimizar/Reabrir
+local minimized = false
+local originalSize = MainContainer.Size
+
+local function minimizeUI()
+    if minimized then
+        smoothTween(MainContainer, {Size = originalSize}, 0.3)
+        smoothTween(BlurEffect, {Size = 10}, 0.3)
+        WinsCard.Visible = true
+        TimeCard.Visible = true
+        AvatarContainer.Visible = true
+        TimerContainer.Visible = true
+        ControlsContainer.Visible = true
+        Footer.Visible = true
+        minimized = false
+        MinBtn.Text = "─"
+        ReopenBtn.Visible = false
+    else
+        smoothTween(MainContainer, {Size = UDim2.new(0, 0, 0, 0)}, 0.3)
+        smoothTween(BlurEffect, {Size = 0}, 0.3)
+        task.wait(0.3)
+        MainContainer.Visible = false
+        ReopenBtn.Visible = true
+        ReopenBtn.Size = UDim2.new(0, 0, 0, 0)
+        smoothTween(ReopenBtn, {Size = UDim2.new(0, 60, 0, 60)}, 0.3)
+        minimized = true
+        MinBtn.Text = "□"
+    end
+end
+
+MinBtn.MouseButton1Click:Connect(minimizeUI)
 
 ReopenBtn.MouseButton1Click:Connect(function()
     smoothTween(ReopenBtn, {Size = UDim2.new(0, 0, 0, 0)}, 0.2)
@@ -646,8 +661,17 @@ ReopenBtn.MouseButton1Click:Connect(function()
     ReopenBtn.Visible = false
     MainContainer.Visible = true
     MainContainer.Size = UDim2.new(0, 0, 0, 0)
-    smoothTween(MainContainer, {Size = UDim2.new(0, 480, 0, 620)}, 0.4)
+    smoothTween(MainContainer, {Size = originalSize}, 0.4)
     smoothTween(BlurEffect, {Size = 10}, 0.4)
+    minimized = false
+    MinBtn.Text = "─"
+end)
+
+ReopenBtn.MouseEnter:Connect(function()
+    smoothTween(ReopenBtn, {Size = UDim2.new(0, 65, 0, 65)}, 0.2)
+end)
+ReopenBtn.MouseLeave:Connect(function()
+    smoothTween(ReopenBtn, {Size = UDim2.new(0, 60, 0, 60)}, 0.2)
 end)
 
 -- Animación de entrada
@@ -656,62 +680,46 @@ task.wait(0.5)
 smoothTween(MainContainer, {Size = UDim2.new(0, 480, 0, 620)}, 0.5)
 smoothTween(BlurEffect, {Size = 10}, 0.5)
 
--- Loop principal
-while true do
-    for i = 20, 1, -1 do
-        TimerLabel.Text = "⏳ Winning In: " .. i .. "s"
-        smoothTween(TimerStroke, {Color = Color3.fromRGB(255, 215, 0)}, 0.3)
-        task.wait(1)
-    end
-    
-    TimerLabel.Text = "⚡ Running Script..."
-    smoothTween(TimerStroke, {Color = Color3.fromRGB(80, 255, 80)}, 0.3)
-    
-    local touchdownSuccess = false
-    pcall(function()
-        for _, v in pairs(workspace:GetChildren()) do
-            if v.Name == "BridgeDuelTouchdownZone" then
-                local char = player.Character
-                if char and v:GetAttribute("TouchdownZoneTeamID") ~= char:GetAttribute("Team") then
-                    local hrp = char:FindFirstChild("HumanoidRootPart")
-                    if hrp then
-                        firetouchinterest(hrp, v, 1)
-                        task.wait(0.1)
-                        firetouchinterest(hrp, v, 0)
-                        touchdownSuccess = true
-                    end
-                end
-            end
+print("✅ Bridge Duels AutoFarm v1.2 Cargado")
+print("🔒 Script protegido - Crédito: " .. OWNER_NAME)
+
+-- ============================================
+-- LOOP PRINCIPAL
+-- ============================================
+task.spawn(function()
+    while true do
+        for i = 20, 1, -1 do
+            CountdownLabel.Text = "⏳ Winning In: " .. i .. "s"
+            smoothTween(TimerStroke, {Color = Color3.fromRGB(255, 215, 0)}, 0.3)
+            task.wait(1)
         end
-    end)
-    
-    if touchdownSuccess then
-        totalWins = totalWins + 1
-        WinsValue.Text = tostring(totalWins)
         
-        -- Animación de win
-        smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(255, 215, 0)}, 0.3)
-        task.wait(0.2)
-        smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(40, 40, 50)}, 0.3)
+        CountdownLabel.Text = "⚡ Running Script..."
+        smoothTween(TimerStroke, {Color = Color3.fromRGB(80, 255, 80)}, 0.3)
         
-        saveWins()
-        sendDiscordEmbed(totalWins)
+        local success = touchTouchdown()
+        
+        if success then
+            totalWins = totalWins + 1
+            WinsValue.Text = tostring(totalWins)
+            saveWins()
+            sendDiscordEmbed(totalWins)
+            
+            smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(255, 215, 0)}, 0.3)
+            task.wait(0.2)
+            smoothTween(WinsCard, {BackgroundColor3 = Color3.fromRGB(40, 40, 50)}, 0.3)
+        end
+        
+        for i = 2, 1, -1 do
+            CountdownLabel.Text = "⏳ Winning In: " .. i .. "s"
+            task.wait(1)
+        end
+        
+        CountdownLabel.Text = "🚀 TELEPORTING..."
+        smoothTween(TimerStroke, {Color = Color3.fromRGB(255, 80, 80)}, 0.3)
+        
+        task.wait(0.5)
+        rejoin()
+        task.wait(5)
     end
-    
-    for i = 2, 1, -1 do
-        TimerLabel.Text = "⏳ Winning In: " .. i .. "s"
-        task.wait(1)
-    end
-    
-    TimerLabel.Text = "🚀 TELEPORTING..."
-    smoothTween(TimerStroke, {Color = Color3.fromRGB(255, 80, 80)}, 0.3)
-    
-    task.wait(0.5)
-    
-    player:Kick()
-    task.wait(1.23)
-    local data = TeleportService:GetLocalPlayerTeleportData()
-    TeleportService:Teleport(game.PlaceId, player, data)
-    
-    task.wait(5)
-end
+end)
