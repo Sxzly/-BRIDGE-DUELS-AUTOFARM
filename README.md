@@ -42,19 +42,19 @@ This script is for educational purposes only. Use at your own risk. I am not res
 
 # 📝 Changelog
 ## v1.1 (Beta) - Current
-✅ Complete UI redesign
+    * ✅ Complete UI redesign
 
-✅ Smooth animations and transitions
+    * ✅ Smooth animations and transitions
 
-✅ Place ID detection (Lobby/In-Game)
+    * ✅ Place ID detection (Lobby/In-Game)
 
-✅ Stats cards for Wins and Runtime
+    * ✅ Stats cards for Wins and Runtime
 
 ## v1.0
 * ✅ Initial release
 * ✅ Basic autofarm functionality
 
 # 👨‍💻 Author
-Sxzly GitHub: @Sxzly
+    * Sxzly GitHub: @Sxzly
 
 # ⭐ Star this repository if you found it helpful! Made with ❤️ by Sxzly
