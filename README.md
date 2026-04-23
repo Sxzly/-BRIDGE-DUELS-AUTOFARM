@@ -59,4 +59,5 @@ This script is for educational purposes only. Use at your own risk. I am not res
 **Sxzly**
 * GitHub: [@Sxzly](https://github.com/Sxzly)
 
-# ⭐ Star this repository if you found it helpful! Made with ❤️ by Sxzly
+## ⭐ Star this repository if you found it helpful!
+### Made with ❤️ by Sxzly
