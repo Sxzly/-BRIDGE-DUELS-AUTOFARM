@@ -60,4 +60,4 @@ This script is for educational purposes only. Use at your own risk. I am not res
 * GitHub: [@Sxzly](https://github.com/Sxzly)
 
 ### ⭐ Star this repository if you found it helpful!
- Made with ❤️ by Sxzly
+    Made with ❤️ by Sxzly
