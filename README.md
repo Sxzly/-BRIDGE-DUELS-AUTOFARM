@@ -19,4 +19,4 @@ A high-performance, modern autofarm script for Bridge Duels, engineered for maxi
 # 📦 Installation
 # Quick Load (Recommended)
 ```lua
-loadstring(game:HttpGet("[https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua](https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua)"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua"))()
