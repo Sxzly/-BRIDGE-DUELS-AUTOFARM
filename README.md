@@ -27,18 +27,15 @@ Download script.lua
 Paste in your executor
 
 Execute in Bridge Duels
-# 🎮 How to Use
-Join Bridge Duels (BedWars game)
+## 🎮 How to Use
 
-Execute the script
-
-Script will automatically:
-
- ⏳ Wait for match start
-
- ⚔️ Touch enemy touchdown zone
-
- 🔄 Rejoin and repeat
+1. Join Bridge Duels (BedWars game)
+2. Execute the script
+3. Script will automatically:
+    * ⏳ Wait for match start
+    * ⚔️ Touch enemy touchdown zone
+    * 🔄 Rejoin and repeat
+4. Track your wins in the modern UI!
 
 # ⚠️ Disclaimer
 This script is for educational purposes only. Use at your own risk. I am not responsible for any bans or issues.
