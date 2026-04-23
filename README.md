@@ -1,2 +1,2 @@
 # ⚔️ Bridge Duels AutoFarm — By Sxzly
-Un script de autofarm moderno y optimizado para Bridge Duels, diseñado para maximizar eficiencia con una interfaz limpia y funcional.
+A high-performance, modern autofarm script for Bridge Duels, engineered for maximum efficiency with a sleek and functional user interface.
