@@ -20,3 +20,40 @@ A high-performance, modern autofarm script for Bridge Duels, engineered for maxi
 # Quick Load (Recommended)
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua"))()
+```
+# Manual Install
+Download script.lua
+
+Paste in your executor
+
+Execute in Bridge Duels
+🎮 How to Use
+Join Bridge Duels (BedWars game)
+
+Execute the script
+
+Script will automatically:
+
+# ⏳ Wait for match start
+
+# ⚔️ Touch enemy touchdown zone
+
+# 🔄 Rejoin and repeat
+
+# ⚠️ Disclaimer
+This script is for educational purposes only. Use at your own risk. I am not responsible for any bans or issues.
+
+# 📝 Changelog
+v1.1 (Beta) - Current
+✅ Complete UI redesign
+
+✅ Smooth animations and transitions
+
+✅ Place ID detection (Lobby/In-Game)
+
+✅ Stats cards for Wins and Runtime
+
+# 👨‍💻 Author
+Sxzly GitHub: @Sxzly
+
+# ⭐ Star this repository if you found it helpful! Made with ❤️ by Sxzly
