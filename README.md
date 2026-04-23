@@ -21,13 +21,13 @@ A high-performance, modern autofarm script for Bridge Duels, engineered for maxi
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua"))()
 ```
-# Manual Install
+## Manual Install
 Download script.lua
 
 Paste in your executor
 
 Execute in Bridge Duels
-## 🎮 How to Use
+# 🎮 How to Use
 
 1. Join Bridge Duels (BedWars game)
 2. Execute the script
