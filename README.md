@@ -41,7 +41,7 @@ Execute in Bridge Duels
 This script is for educational purposes only. Use at your own risk. I am not responsible for any bans or issues.
 
 # 📝 Changelog
-v1.1 (Beta) - Current
+# v1.1 (Beta) - Current
 ✅ Complete UI redesign
 
 ✅ Smooth animations and transitions
