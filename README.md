@@ -1,4 +1,8 @@
 # ⚔️ Bridge Duels AutoFarm — By Sxzly
+
+![Version](https://img.shields.io/badge/version-v1.1-blue) ![Status](https://img.shields.io/badge/status-beta-orange) ![Made By](https://img.shields.io/badge/made%20by-Sxzly-purple)
+
+---
 A high-performance, modern autofarm script for Bridge Duels, engineered for maximum efficiency with a sleek and functional user interface.
 # ✨ Features
 🏆 Automatic Win Farming: Seamlessly farm wins without manual input.
