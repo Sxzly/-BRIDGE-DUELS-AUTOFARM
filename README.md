@@ -50,6 +50,10 @@ This script is for educational purposes only. Use at your own risk. I am not res
 
 ✅ Stats cards for Wins and Runtime
 
+### v1.0
+* ✅ Initial release
+* ✅ Basic autofarm functionality
+
 # 👨‍💻 Author
 Sxzly GitHub: @Sxzly
 
