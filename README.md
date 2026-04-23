@@ -40,7 +40,7 @@ Script will automatically:
 
  🔄 Rejoin and repeat
 
- ⚠️ Disclaimer
+# ⚠️ Disclaimer
 This script is for educational purposes only. Use at your own risk. I am not responsible for any bans or issues.
 
 # 📝 Changelog
