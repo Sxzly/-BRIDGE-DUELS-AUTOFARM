@@ -18,4 +18,4 @@ A high-performance, modern autofarm script for Bridge Duels, engineered for maxi
 📍 Smart Detection: Built-in logic to detect if you are in the Lobby or mid-game.
 # 📦 Installation
 # Quick Load (Recommended)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua"))()
+"loadstring(game:HttpGet("https://raw.githubusercontent.com/Sxzly/-BRIDGE-DUELS-AUTOFARM/main/script.lua"))()"
